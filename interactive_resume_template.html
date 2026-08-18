@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[YOUR NAME] | Interactive Resume</title>
+  <meta name="description" content="Interactive resume for [YOUR NAME]. [YOUR PROFESSIONAL DESCRIPTION]" />
+  <style>
+    :root {
+      --bg-0: #f3f7fa;
+      --bg-1: #e8eff5;
+      --panel: rgba(255, 255, 255, 0.55);
+      --panel-strong: rgba(255, 255, 255, 0.78);
+      --ink-0: #0f2133;
+      --ink-1: #2a455d;
+      --ink-soft: #4d6b85;
+      --line: rgba(33, 68, 99, 0.22);
+      --accent: #0f6ba8;
+      --accent-soft: #7fb8de;
+      --accent-2: #005f73;
+      --focus: #f59e0b;
+      --ok: #2f855a;
+      --shadow: 0 18px 44px rgba(15, 33, 51, 0.14);
+      --radius: 16px;
+      --radius-sm: 12px;
+      --maxw: 1140px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink-0);
+      font-family: "Segoe UI", "Trebuchet MS", "Verdana", sans-serif;
+      line-height: 1.6;
+      background:
+        radial-gradient(1200px 700px at -10% -10%, #bcd3e6 0%, transparent 65%),
+        radial-gradient(900px 500px at 110% 10%, #c3d7e6 0%, transparent 60%),
+        linear-gradient(150deg, var(--bg-0), var(--bg-1));
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--accent-2);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 2px;
+    }
+
+    a:hover,
+    a:focus-visible {
+      color: var(--accent);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px) saturate(130%);
+      -webkit-backdrop-filter: blur(14px) saturate(130%);
+      background: rgba(243, 247, 250, 0.74);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 10px 18px;
+    }
+
+    .brand {
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--ink-1);
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .nav-btn {
+      border: 1px solid rgba(18, 70, 110, 0.24);
+      background: rgba(255, 255, 255, 0.45);
+      color: var(--ink-1);
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
+    }
+
+    .nav-btn:hover,
+    .nav-btn:focus-visible,
+    .nav-btn.active {
+      background: rgba(127, 184, 222, 0.38);
+      border-color: rgba(15, 107, 168, 0.45);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .print-btn {
+      border: 1px solid rgba(11, 73, 118, 0.4);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(173, 206, 228, 0.52));
+      color: var(--ink-1);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 160ms ease, background-color 160ms ease;
+    }
+
+    .print-btn:hover,
+    .print-btn:focus-visible {
+      background: rgba(127, 184, 222, 0.52);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    main {
+      max-width: var(--maxw);
+      margin: 30px auto 44px;
+      padding: 0 18px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px) saturate(130%);
+      -webkit-backdrop-filter: blur(12px) saturate(130%);
+      overflow: hidden;
+      animation: rise 650ms ease both;
+    }
+
+    .card-inner {
+      padding: 22px 22px 24px;
+    }
+
+    .hero {
+      display: grid;
+      gap: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 2.8vw + 1rem, 3.1rem);
+      line-height: 1.1;
+      color: var(--ink-1);
+      letter-spacing: 0.01em;
+    }
+
+    .location {
+      color: var(--ink-soft);
+      margin: 0;
+    }
+
+    .role-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .glass-role {
+      border: 1px solid rgba(17, 72, 112, 0.26);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.44), rgba(180, 209, 229, 0.3));
+      padding: 9px 14px;
+      border-radius: 999px;
+      color: var(--ink-1);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .glass-role:hover,
+    .glass-role:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(14, 43, 64, 0.18);
+      outline: none;
+    }
+
+    .quick-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(17, 72, 112, 0.24);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--panel-strong);
+      color: var(--ink-1);
+      text-decoration: none;
+      transition: background-color 160ms ease, transform 160ms ease;
+    }
+
+    .chip:hover,
+    .chip:focus-visible {
+      background: rgba(127, 184, 222, 0.34);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin: 0;
+      color: var(--ink-1);
+      letter-spacing: 0.02em;
+      font-size: clamp(1.2rem, 1.4vw + 0.8rem, 1.75rem);
+    }
+
+    h3 {
+      margin: 10px 0 6px;
+      color: var(--ink-1);
+      font-size: 1.06rem;
+    }
+
+    .summary {
+      margin: 0;
+      color: var(--ink-0);
+    }
+
+    .grid-two {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .skill-box {
+      background: rgba(255, 255, 255, 0.52);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+
+    .pill-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .pill {
+      background: rgba(213, 228, 240, 0.78);
+      border: 1px solid rgba(33, 68, 99, 0.22);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.9rem;
+      color: #173650;
+    }
+
+    .list {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .list li {
+      margin: 6px 0;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      position: relative;
+    }
+
+    .exp-item {
+      background: rgba(255, 255, 255, 0.56);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 14px 14px 12px;
+    }
+
+    .exp-meta {
+      color: var(--ink-soft);
+      font-size: 0.93rem;
+    }
+
+    .project-filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      border: 1px solid rgba(17, 72, 112, 0.24);
+      background: rgba(255, 255, 255, 0.54);
+      color: var(--ink-1);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover,
+    .filter-btn:focus-visible {
+      background: rgba(127, 184, 222, 0.44);
+      border-color: rgba(15, 107, 168, 0.46);
+      outline: none;
+    }
+
+    .projects {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .project {
+      background: rgba(255, 255, 255, 0.56);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .project[hidden] {
+      opacity: 0;
+      transform: scale(0.98);
+      display: none;
+    }
+
+    details {
+      margin-top: 8px;
+      background: rgba(255, 255, 255, 0.48);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px 10px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--ink-1);
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::before {
+      content: "+";
+      display: inline-block;
+      margin-right: 8px;
+      font-weight: 700;
+    }
+
+    details[open] summary::before {
+      content: "-";
+    }
+
+    .edu-block,
+    .simple-block {
+      background: rgba(255, 255, 255, 0.56);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+
+    .foot {
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      padding-bottom: 10px;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+      border-radius: 10px;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .grid-two {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .brand {
+        text-align: center;
+      }
+
+      .nav-links {
+        justify-content: center;
+      }
+
+      .card-inner {
+        padding: 18px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: letter;
+        margin: 0.45in;
+      }
+
+      html,
+      body {
+        background: #ffffff !important;
+        color: #122436 !important;
+        font-size: 10.2px;
+        line-height: 1.28;
+      }
+
+      body {
+        min-height: auto;
+      }
+
+      .topbar {
+        position: static;
+        border-bottom: 1px solid #d5e0ea;
+        background: #ffffff;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+
+      .topbar-inner {
+        max-width: none;
+        padding: 0 0 8px;
+      }
+
+      .nav-links,
+      .print-btn,
+      .project-filters,
+      .foot {
+        display: none !important;
+      }
+
+      main {
+        max-width: none;
+        margin: 10px 0 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .card {
+        border: 1px solid #d6e1eb;
+        border-radius: 8px;
+        box-shadow: none;
+        background: #ffffff;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        animation: none;
+        break-inside: avoid;
+      }
+
+      .card-inner {
+        padding: 9px 10px;
+      }
+
+      h1 {
+        font-size: 16px;
+      }
+
+      h2 {
+        font-size: 12px;
+      }
+
+      h3 {
+        font-size: 10.4px;
+        margin: 6px 0 2px;
+      }
+
+      p,
+      li,
+      .exp-meta,
+      .pill,
+      .chip {
+        font-size: 9.5px;
+      }
+
+      .role-row {
+        margin-top: 2px;
+        gap: 6px;
+      }
+
+      .glass-role,
+      .chip,
+      .pill,
+      .exp-item,
+      .skill-box,
+      .edu-block,
+      .simple-block,
+      .project,
+      details {
+        border-color: #d6e1eb;
+        background: #ffffff;
+        box-shadow: none;
+      }
+
+      .list {
+        margin-top: 4px;
+        padding-left: 16px;
+      }
+
+      .list li {
+        margin: 2px 0;
+      }
+
+      .project[hidden] {
+        display: block !important;
+        opacity: 1;
+        transform: none;
+      }
+
+      details summary::before {
+        content: "";
+        margin-right: 0;
+      }
+
+      details > * {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" aria-label="Primary">
+    <div class="topbar-inner">
+      <div class="brand">[YOUR NAME] Resume</div>
+      <nav class="nav-links" aria-label="Resume sections">
+        <a class="nav-btn" href="#summary">Summary</a>
+        <a class="nav-btn" href="#skills">Skills</a>
+        <a class="nav-btn" href="#focus">Current Focus</a>
+        <a class="nav-btn" href="#experience">Experience</a>
+        <a class="nav-btn" href="#projects">Projects</a>
+        <a class="nav-btn" href="#education">Education</a>
+      </nav>
+      <button class="print-btn" id="printResumeBtn" type="button" aria-label="Print or save resume as PDF">Print/PDF</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="card" id="top">
+      <div class="card-inner hero">
+        <h1>[YOUR FULL NAME]</h1>
+        <p class="location">[YOUR CITY, STATE]</p>
+
+        <div class="role-row" aria-label="Professional titles">
+          <button class="glass-role" type="button">[JOB TITLE 1]</button>
+          <button class="glass-role" type="button">[JOB TITLE 2]</button>
+          <button class="glass-role" type="button">[JOB TITLE 3]</button>
+        </div>
+
+        <div class="quick-links" aria-label="Contact links">
+          <a class="chip" href="mailto:[YOUR EMAIL]">Email</a>
+          <a class="chip" href="tel:[YOUR PHONE]">[YOUR PHONE]</a>
+          <a class="chip" href="[YOUR LINKEDIN URL]" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="chip" href="[YOUR GITHUB URL]" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="chip" href="[YOUR PORTFOLIO URL]" target="_blank" rel="noopener noreferrer">Portfolio</a>
+          <span class="chip" aria-label="Portfolio note">[OPTIONAL: Additional Contact Info]</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="summary">
+      <div class="card-inner">
+        <div class="section-head">
+          <h2>Professional Summary</h2>
+        </div>
+        <p class="summary">
+          [Add your professional summary here. Briefly describe your background, expertise, and career goals. 
+          Include key achievements, areas of specialization, and what you're looking for in your next role.]
+        </p>
+      </div>
+    </section>
+
+    <section class="card" id="skills">
+      <div class="card-inner">
+        <div class="section-head">
+          <h2>Technical Skills</h2>
+        </div>
+        <div class="grid-two">
+          <article class="skill-box">
+            <h3>[SKILL CATEGORY 1]</h3>
+            <div class="pill-wrap">
+              <span class="pill">[Skill 1]</span>
+              <span class="pill">[Skill 2]</span>
+              <span class="pill">[Skill 3]</span>
+              <span class="pill">[Skill 4]</span>
+              <span class="pill">[Skill 5]</span>
+              <span class="pill">[Skill 6]</span>
+            </div>
+          </article>
+
+          <article class="skill-box">
+            <h3>[SKILL CATEGORY 2]</h3>
+            <div class="pill-wrap">
+              <span class="pill">[Skill 1]</span>
+              <span class="pill">[Skill 2]</span>
+              <span class="pill">[Skill 3]</span>
+            </div>
+
+            <h3>[SKILL CATEGORY 3]</h3>
+            <div class="pill-wrap">
+              <span class="pill">[Skill 1]</span>
+              <span class="pill">[Skill 2]</span>
+              <span class="pill">[Skill 3]</span>
+              <span class="pill">[Skill 4]</span>
+            </div>
+          </article>
+
+          <article class="skill-box">
+            <h3>[SKILL CATEGORY 4]</h3>
+            <div class="pill-wrap">
+              <span class="pill">[Skill 1]</span>
+              <span class="pill">[Skill 2]</span>
+              <span class="pill">[Skill 3]</span>
+            </div>
+          </article>
+
+          <article class="skill-box" id="focus">
+            <h3>Current Development Focus</h3>
+            <ul class="list">
+              <li>[Current focus area 1]</li>
+              <li>[Current focus area 2]</li>
+              <li>[Current focus area 3]</li>
+              <li>[Current focus area 4]</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="certifications">
+      <div class="card-inner">
+        <div class="section-head">
+          <h2>Certifications</h2>
+        </div>
+        <div class="simple-block">
+          <h3>[CERTIFICATION NAME]</h3>
+          <p class="summary">[Add certification description and verification details here.]</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="experience">
+      <div class="card-inner">
+        <div class="section-head">
+          <h2>Experience</h2>
+        </div>
+
+        <div class="timeline">
+          <article class="exp-item">
+            <h3>[JOB TITLE]</h3>
+            <p class="exp-meta">[Company Name] | [Location] | [Start Date] - [End Date or Present]</p>
+            <ul class="list">
+              <li>[Achievement or responsibility 1]</li>
+              <li>[Achievement or responsibility 2]</li>
+              <li>[Achievement or responsibility 3]</li>
+              <li>[Achievement or responsibility 4]</li>
+            </ul>
+          </article>
+
+          <article class="exp-item">
+            <h3>[JOB TITLE]</h3>
+            <p class="exp-meta">[Company Name] | [Location] | [Start Date] - [End Date or Present]</p>
+            <ul class="list">
+              <li>[Achievement or responsibility 1]</li>
+              <li>[Achievement or responsibility 2]</li>
+              <li>[Achievement or responsibility 3]</li>
+            </ul>
+          </article>
+
+          <article class="exp-item">
+            <h3>[JOB TITLE]</h3>
+            <p class="exp-meta">[Company Name] | [Location] | [Start Date] - [End Date or Present]</p>
+            <ul class="list">
+              <li>[Achievement or responsibility 1]</li>
+              <li>[Achievement or responsibility 2]</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="projects">
+      <div class="card-inner">
+        <div class="section-head">
+          <h2>Selected Projects</h2>
+          <div class="project-filters" role="toolbar" aria-label="Project filters">
+            <button class="filter-btn active" type="button" data-filter="all">All</button>
+            <button class="filter-btn" type="button" data-filter="category1">Category 1</button>
+            <button class="filter-btn" type="button" data-filter="category2">Category 2</button>
+            <button class="filter-btn" type="button" data-filter="category3">Category 3</button>
+          </div>
+        </div>
+
+        <div class="projects">
+          <article class="project" data-tags="category1">
+            <h3>[PROJECT NAME 1]</h3>
+            <p class="exp-meta">[Project Type/Technology]</p>
+            <ul class="list">
+              <li>[Project detail or accomplishment 1]</li>
+              <li>[Project detail or accomplishment 2]</li>
+              <li>[Project detail or accomplishment 3]</li>
+            </ul>
+            <p><a href="[PROJECT LINK]" target="_blank" rel="noopener noreferrer">View Project</a></p>
+          </article>
+
+          <article class="project" data-tags="category2">
+            <h3>[PROJECT NAME 2]</h3>
+            <p class="exp-meta">[Project Type/Technology]</p>
+            <ul class="list">
+              <li>[Project detail or accomplishment 1]</li>
+              <li>[Project detail or accomplishment 2]</li>
+            </ul>
+            <p><a href="[PROJECT LINK]" target="_blank" rel="noopener noreferrer">View Project</a></p>
+          </article>
+
+          <article class="project" data-tags="category3">
+            <h3>[PROJECT NAME 3]</h3>
+            <p class="exp-meta">[Project Type/Technology]</p>
+            <ul class="list">
+              <li>[Project detail or accomplishment 1]</li>
+              <li>[Project detail or accomplishment 2]</li>
+              <li>[Project detail or accomplishment 3]</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="education">
+      <div class="card-inner">
+        <div class="section-head">
+          <h2>Education</h2>
+        </div>
+        <article class="edu-block">
+          <h3>[SCHOOL/UNIVERSITY NAME]</h3>
+          <p class="exp-meta">[Degree Type] in [Field of Study]</p>
+          <p class="summary"><strong>GPA:</strong> [Your GPA]<br /><strong>Graduation Date:</strong> [Month Year]</p>
+
+          <details>
+            <summary>Relevant Areas of Study</summary>
+            <ul class="list">
+              <li>[Course or area of study 1]</li>
+              <li>[Course or area of study 2]</li>
+              <li>[Course or area of study 3]</li>
+              <li>[Course or area of study 4]</li>
+            </ul>
+          </details>
+        </article>
+      </div>
+    </section>
+
+    <section class="card" id="additional">
+      <div class="card-inner">
+        <div class="section-head">
+          <h2>Additional Information</h2>
+        </div>
+        <div class="simple-block">
+          <ul class="list">
+            <li>[Additional qualification or interest 1]</li>
+            <li>[Additional qualification or interest 2]</li>
+            <li>[Additional qualification or interest 3]</li>
+            <li>References available upon request.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <p class="foot">Interactive resume designed for fast scanning, accessibility, and recruiter-friendly navigation.</p>
+  </main>
+
+  <script>
+    (function () {
+      const printButton = document.getElementById('printResumeBtn');
+      printButton?.addEventListener('click', () => window.print());
+
+      const navButtons = Array.from(document.querySelectorAll('.nav-btn'));
+      const sections = navButtons
+        .map((btn) => document.querySelector(btn.getAttribute('href')))
+        .filter(Boolean);
+
+      const activateNav = () => {
+        let activeId = '';
+        const offset = window.scrollY + 140;
+        for (const section of sections) {
+          if (section.offsetTop <= offset) {
+            activeId = section.id;
+          }
+        }
+
+        navButtons.forEach((btn) => {
+          const target = btn.getAttribute('href').slice(1);
+          btn.classList.toggle('active', target === activeId);
+        });
+      };
+
+      window.addEventListener('scroll', activateNav, { passive: true });
+      activateNav();
+
+      const filterButtons = Array.from(document.querySelectorAll('.filter-btn'));
+      const projects = Array.from(document.querySelectorAll('.project'));
+
+      const applyFilter = (filter) => {
+        projects.forEach((project) => {
+          const tags = project.getAttribute('data-tags') || '';
+          const shouldShow = filter === 'all' || tags.includes(filter);
+          project.hidden = !shouldShow;
+        });
+      };
+
+      filterButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          filterButtons.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          applyFilter(btn.dataset.filter || 'all');
+        });
+      });
+
+      const roleButtons = Array.from(document.querySelectorAll('.glass-role'));
+      roleButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const target = '#projects';
+          document.querySelector(target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
